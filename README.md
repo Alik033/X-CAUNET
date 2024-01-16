@@ -9,6 +9,7 @@
 ```
 self.filesA, self.filesB = self.get_file_paths(self.data_path, 'UIEB') ---> UIEB or SUIM
 ```
+  - Dataset file structure should be as follows:
 ```
 ├── UIEB/SUIM
     ├── Train
