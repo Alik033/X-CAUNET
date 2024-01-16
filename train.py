@@ -24,7 +24,6 @@ import sys
 import clip
 import torchvision.transforms as T
 from ssim import *
-#from U_AS_transformer_v3 import U_Restormer
 import wandb
 
 
@@ -52,7 +51,7 @@ if __name__ == '__main__':
 
 	L1_loss = nn.L1Loss()
 	mse_loss = nn.MSELoss()
-	#ssim_loss = SSIMLoss(11)
+	ssim_loss = SSIMLoss(11)
 
 	vgg = Vgg16(requires_grad=False).to(device)
 
@@ -102,6 +101,7 @@ if __name__ == '__main__':
 	
 		opt.total_mse_loss = 0.0
 		opt.total_vgg_loss = 0.0
+		opt.total_ssim_loss = 0.0
 		opt.total_G_loss = 0.0
 
 		for i_batch, sample_batched in enumerate(dataloader):
@@ -115,10 +115,13 @@ if __name__ == '__main__':
 			optim_g.zero_grad()
 
 			pred_batch = netG(hazy_batch)
-			channel_wise_mul = [1, 1.5, 2]
-
+			
 			batch_mse_loss = torch.mul(opt.lambda_mse, L1_loss(pred_batch, clean_batch))
 			batch_mse_loss.backward(retain_graph=True)
+
+			batch_ssim_loss = torch.mul(opt.lambda_ssim, ssim_loss(pred_batch, clean_batch))
+			batch_ssim_loss.backward(retain_graph=True)
+			
 
 			batch_vgg_loss = 0.0
 			for i in range(opt.batch_size):
@@ -133,21 +136,25 @@ if __name__ == '__main__':
 				batch_vgg_loss += torch.mul(opt.lambda_vgg, mse_loss(pred_image_features, clean_image_features))
 			batch_vgg_loss.backward(retain_graph=True)
 			
+
 			opt.batch_mse_loss = batch_mse_loss.item()
 			opt.total_mse_loss += opt.batch_mse_loss
+
+			opt.batch_ssim_loss = batch_ssim_loss.item()
+			opt.total_ssim_loss += opt.batch_ssim_loss
 
 
 			opt.batch_vgg_loss = batch_vgg_loss.item()
 			opt.total_vgg_loss += opt.batch_vgg_loss
 
-			opt.batch_G_loss = opt.batch_mse_loss + opt.batch_vgg_loss
+			opt.batch_G_loss = opt.batch_mse_loss + opt.batch_vgg_loss + opt.batch_ssim_loss
 			opt.total_G_loss += opt.batch_G_loss
 			
 			optim_g.step()
 			#scheduler.step()
 
 			# bar.suffix = f' Epoch : {epoch} | ({i_batch+1}/{batches}) | ETA: {bar.eta_td} | g_mse: {opt.batch_mse_loss} | g_vgg: {opt.batch_vgg_loss}'
-			print('\r Epoch : ' + str(epoch) + ' | (' + str(i_batch+1) + '/' + str(batches) + ') | mse: ' + str(opt.batch_mse_loss) + ' | clip: ' + str(opt.batch_vgg_loss), end='', flush=True)
+			print('\r Epoch : ' + str(epoch) + ' | (' + str(i_batch+1) + '/' + str(batches) + ') | mse: ' + str(opt.batch_mse_loss) + ' | clip: ' + str(opt.batch_vgg_loss) + ' | ssim: ' + str(opt.batch_ssim_loss), end='', flush=True)
 			# bar.next()
 			
 		model_params = {}
@@ -156,7 +163,7 @@ if __name__ == '__main__':
 				model_params[name] = param.data
 		
 
-		print('\nFinished ep. %d, lr = %.6f, total_mse = %.6f, total_clip = %.6f' % (epoch, get_lr(optim_g), opt.total_mse_loss, opt.total_vgg_loss))
+		print('\nFinished ep. %d, lr = %.6f, total_mse = %.6f, total_clip = %.6f, total_ssim = %.6f' % (epoch, get_lr(optim_g), opt.total_mse_loss, opt.total_vgg_loss, opt.total_ssim_loss))
 			# print('training epoch %d, %d / %d patches are finished, g_mse = %.6f' % (
 			 # epoch, i_batch, batches, opt.batch_mse_loss))
 
@@ -175,6 +182,7 @@ if __name__ == '__main__':
 					'model_state_dict':netG.state_dict(), 
 					'optimizer_state_dict':optim_g.state_dict(), 
 					'L1_loss':opt.total_mse_loss, 
-					'vgg_loss':opt.total_vgg_loss,  
+					'vgg_loss':opt.total_vgg_loss, 
+					'ssim_loss':opt.total_ssim_loss, 
 					'opt':opt,
 					'total_loss':opt.total_G_loss}, os.path.join(opt.checkpoints_dir, 'netG_' + str(epoch) + '.pt'))
