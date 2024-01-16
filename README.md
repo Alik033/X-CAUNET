@@ -1,1 +1,44 @@
-# X-CAUNET
+## X-CAUNET: Cross-Channel Attention with Underwater Image-Enhancement Transformer
+- This paper deals with the **underwater image enhancement**.
+- For underwater image enhancement, we have utilized publicly available datasets 
+  - [**UIEB**](https://li-chongyi.github.io/proj_benchmark.html).
+  - [**SUIM-E**](https://drive.google.com/drive/folders/1gA3Ic7yOSbHd3w214-AgMI9UleAt4bRM).
+
+## The structure of data folder is as follows:
+- Please change the line no. 31 on dataset.py for differnet datasets.
+```
+self.filesA, self.filesB = self.get_file_paths(self.data_path, 'UIEB') ---> UIEB or SUIM
+```
+```
+├── UIEB/SUIM
+    ├── Train
+        ├── inp
+            ├── *.jpg/*.png
+            ├── *.jpg/*.png
+            └── ...
+        ├── gt
+            ├── *.jpg/*.png
+            ├── *.jpg/*.png
+            └── ...
+    ├── Test
+        ├── inp
+            ├── *.jpg/*.png
+            ├── *.jpg/*.png
+            └── ...
+        ├── gt
+            ├── *.jpg/*.png
+            ├── *.jpg/*.png
+            └── ...
+```
+## Train
+``` 
+python train.py
+```
+## Test
+```
+python test.py
+```
+## Citation
+
+## Acknowledgements
+- https://github.com/pksvision/Deep-WaveNet-Underwater-Image-Restoration
