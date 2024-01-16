@@ -5,7 +5,7 @@
 ## Datasets
   - [**UIEB**](https://li-chongyi.github.io/proj_benchmark.html).
   - [**SUIM-E**](https://drive.google.com/drive/folders/1gA3Ic7yOSbHd3w214-AgMI9UleAt4bRM).
-  - Please change the line no. 31 on dataset.py for differnet datasets.
+  - Please modify the line no. 31 in dataset.py for differnet datasets.
 ```
 self.filesA, self.filesB = self.get_file_paths(self.data_path, 'UIEB') ---> UIEB or SUIM
 ```
@@ -36,6 +36,7 @@ self.filesA, self.filesB = self.get_file_paths(self.data_path, 'UIEB') ---> UIEB
 python train.py
 ```
 ## Test
+-Please modify the line no. 28 in test.py with **uieb.pt** or **suim.pt** for different test data.
 ```
 python test.py
 ```
