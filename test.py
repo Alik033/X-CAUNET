@@ -14,7 +14,6 @@ import shutil
 from tqdm import tqdm
 from measure_ssim_psnr import *
 from measure_uiqm import *
-#from U_AS_transformer_v3 import U_Restormer
 
 
 CHECKPOINTS_DIR = opt.checkpoints_dir
@@ -26,7 +25,7 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 ch = 3
 
 network = U_Restormer()
-checkpoint = torch.load(os.path.join(CHECKPOINTS_DIR,"netG_99.pt"))
+checkpoint = torch.load(os.path.join(CHECKPOINTS_DIR,"uieb.pt"))
 network.load_state_dict(checkpoint['model_state_dict'])
 network.eval()
 network.to(device)
