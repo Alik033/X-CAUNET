@@ -1,5 +1,5 @@
 ## X-CAUNET: Cross-Channel Attention with Underwater Image-Enhancement Transformer
-- This paper has been accepted in ICASSP 2024.
+- This paper has been accepted in **ICASSP 2024**.
 ## Checkpoints
 - You can download the trained models from [here](https://drive.google.com/drive/folders/1pKXJ2kaYg1DrjNUvagyk3BAAROn_4wWx?usp=drive_link).
 ## Datasets
