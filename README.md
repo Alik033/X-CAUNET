@@ -41,6 +41,17 @@ python train.py
 python test.py
 ```
 ## Citation
-
+```
+@INPROCEEDINGS{10445832,
+  author={Pramanick, Alik and Sarma, Sandipan and Sur, Arijit},
+  booktitle={ICASSP 2024 - 2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={X-CAUNET: Cross-Color Channel Attention with Underwater Image-Enhancing Transformer}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={3550-3554},
+  keywords={Correlation;Image color analysis;Message passing;Speech enhancement;Transformers;Colored noise;Image enhancement;Cross-attention;transformer;underwater image enhancement;deep learning},
+  doi={10.1109/ICASSP48485.2024.10445832}}
+```
 ## Acknowledgements
 - https://github.com/pksvision/Deep-WaveNet-Underwater-Image-Restoration
